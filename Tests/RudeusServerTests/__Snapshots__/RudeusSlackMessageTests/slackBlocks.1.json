@@ -9,6 +9,13 @@
     },
     {
       "text" : {
+        "text" : "🛠️ _This message was sent for development purposes, please ignore._",
+        "type" : "mrkdwn"
+      },
+      "type" : "section"
+    },
+    {
+      "text" : {
         "text" : "*why_people* has shared a new haptic pattern named *Events and Parameters*",
         "type" : "mrkdwn"
       },
@@ -21,5 +28,6 @@
       },
       "type" : "section"
     }
-  ]
+  ],
+  "channel" : "test"
 }

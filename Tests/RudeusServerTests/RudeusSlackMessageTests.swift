@@ -12,6 +12,9 @@ struct RudeusSlackMessageTests {
       username: "why_people",
       ahapPattern: .eventsAndParameters
     )
-    assertSnapshot(of: RudeusSlackMessage.patternShared(pattern), as: .json)
+    assertSnapshot(
+      of: RudeusSlackMessage.patternShared(channelId: "test", pattern),
+      as: .json
+    )
   }
 }

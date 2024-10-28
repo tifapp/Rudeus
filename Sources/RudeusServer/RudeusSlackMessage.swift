@@ -1,21 +1,28 @@
+import IssueReporting
+
 // MARK: - RudeusSlackMessage
 
 /// A message that this server posts to slack.
 public struct RudeusSlackMessage: Hashable, Sendable, Codable {
+  private let channel: String
   private let blocks: [SlackBlock]
 
   /// Creates a slack message for sharing a new haptic pattern.
   //
-  /// - Parameter pattern: A ``RudeusPattern``.
+  /// - Parameters:
+  ///   - chahnelId: The ID of the slack channel to send the message to.
+  ///   - pattern: A ``RudeusPattern``.
   /// - Returns: A slack message.
-  public static func patternShared(_ pattern: RudeusPattern) -> Self {
-    Self(
-      blocks: [
-        .header("A new haptic pattern was shared!"),
-        .section("*\(pattern.username)* has shared a new haptic pattern named *\(pattern.name)*"),
-        .section("```\n\(pattern.tiFTypescript())```")
-      ]
-    )
+  public static func patternShared(channelId: String, _ pattern: RudeusPattern) -> Self {
+    var blocks = [SlackBlock.header("A new haptic pattern was shared!")]
+    if isTesting {
+      blocks.append(.section("🛠️ _This message was sent for development purposes, please ignore._"))
+    }
+    blocks.append(contentsOf: [
+      .section("*\(pattern.username)* has shared a new haptic pattern named *\(pattern.name)*"),
+      .section("```\n\(pattern.tiFTypescript())```")
+    ])
+    return Self(channel: channelId, blocks: blocks)
   }
 }
 
