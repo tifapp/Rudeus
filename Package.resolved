@@ -1,5 +1,5 @@
 {
-  "originHash" : "9f08fb280e333422c2ca88f598f53fb146c451a8364a4f1c13b569555a13f2d9",
+  "originHash" : "e5c911ee64dbf2bd2ae7fc1355964e9a6f575ee4d2c5463910995fcb40a25731",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -272,6 +272,15 @@
       }
     },
     {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "state" : {
+        "revision" : "42a086182681cf661f5c47c9b7dc3931de18c6d7",
+        "version" : "1.17.6"
+      }
+    },
+    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax",
@@ -295,7 +304,7 @@
       "location" : "https://github.com/mhayes853/WhyPeopleKit",
       "state" : {
         "branch" : "dev",
-        "revision" : "6585a6a527c69f68b1bc2a9223c55251a2c82127"
+        "revision" : "498d753dc25e08ca2f20517aff141807e86630c9"
       }
     },
     {

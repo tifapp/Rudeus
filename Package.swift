@@ -28,6 +28,7 @@ let package = Package(
       name: "RudeusServerTests",
       dependencies: [
         "RudeusServer",
+        .product(name: "WPSnapshotTesting", package: "WhyPeopleKit"),
         .product(name: "HummingbirdTesting", package: "hummingbird")
       ]
     ),
