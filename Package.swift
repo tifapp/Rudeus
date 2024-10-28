@@ -30,7 +30,8 @@ let package = Package(
         "RudeusServer",
         .product(name: "WPSnapshotTesting", package: "WhyPeopleKit"),
         .product(name: "HummingbirdTesting", package: "hummingbird")
-      ]
+      ],
+      exclude: ["__Snapshots__"]
     ),
     .executableTarget(
       name: "Rudeus",

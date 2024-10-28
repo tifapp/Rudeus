@@ -1,0 +1,25 @@
+{
+  "blocks" : [
+    {
+      "text" : {
+        "text" : "A new haptic pattern was shared!",
+        "type" : "plain_text"
+      },
+      "type" : "header"
+    },
+    {
+      "text" : {
+        "text" : "*why_people* has shared a new haptic pattern named *Events and Parameters*",
+        "type" : "mrkdwn"
+      },
+      "type" : "section"
+    },
+    {
+      "text" : {
+        "text" : "```\n\/\/ Version: 1\n\/\/\n\/\/ \"Events and Parameters\" by why_people\n\nexport const eventsAndParameters = hapticPattern(\n  events(\n    continuousEvent(0.0, 2.0, { \n      DecayTime: 0.9,\n      HapticIntensity: 0.5,\n      HapticSharpness: 0.67 \n    }),\n    transientEvent(0.1, { HapticIntensity: 0.8, HapticSharpness: 0.2 }),\n    soundEffectEvent(\"bang.caf\", 0.5, { AudioVolume: 0.5 }),\n    continuousSoundEvent(\"dead.caf\", 2.0, 2.0, {})\n  ),\n  parameters(\n    dynamicParameter(\"AudioReleaseTimeControl\", 0.4, 0.5),\n    parameterCurve(\"AudioPanControl\", 0.0, [\n      keyFrame(1.0, 0.0)\n    ]),\n    parameterCurve(\"HapticIntensityControl\", 0.0, [\n      keyFrame(0.1, 0.0),\n      keyFrame(0.8, 0.5),\n      keyFrame(0.4, 1.2)\n    ])\n  )\n)```",
+        "type" : "mrkdwn"
+      },
+      "type" : "section"
+    }
+  ]
+}

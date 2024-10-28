@@ -5,13 +5,13 @@ import WPHaptics
 
 /// A user uploaded haptic pattern.
 public struct RudeusPattern: Hashable, Sendable, Codable {
-  public let userId: UUID
+  public let id: UUID
   public let name: String
   public let username: String
   public let ahapPattern: AHAPPattern
 
-  public init(userId: UUID = UUID(), name: String, username: String, ahapPattern: AHAPPattern) {
-    self.userId = userId
+  public init(id: UUID = UUID(), name: String, username: String, ahapPattern: AHAPPattern) {
+    self.id = id
     self.name = name
     self.username = username
     self.ahapPattern = ahapPattern
