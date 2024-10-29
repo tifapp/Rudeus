@@ -1,5 +1,6 @@
 import Hummingbird
 import Logging
+import WPFoundation
 
 // MARK: - RudeusApplication
 
@@ -61,6 +62,7 @@ extension RudeusApplication {
     let user = try context.requireUser()
     let request = try await request.decode(as: RudeusSavePatternRequest.self, context: context)
     let pattern = RudeusPattern(
+      id: request.id ?? UUIDV7(),
       name: request.name,
       user: user,
       ahapPattern: request.ahapPattern,
@@ -70,7 +72,7 @@ extension RudeusApplication {
     try await self.environment.slackClient.send(
       message: .patternShared(channelId: self.environment.slackChannelId, pattern)
     )
-    return EditedResponse(status: .created, response: pattern)
+    return EditedResponse(status: request.id != nil ? .ok : .created, response: pattern)
   }
 }
 
