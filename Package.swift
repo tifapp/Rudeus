@@ -13,7 +13,9 @@ let package = Package(
     .package(url: "https://github.com/mhayes853/WhyPeopleKit", branch: "dev"),
     .package(url: "https://github.com/apple/swift-log", from: "1.6.1"),
     .package(url: "https://github.com/swift-server/async-http-client", from: "1.23.1"),
-    .package(url: "https://github.com/vapor/jwt-kit", from: "5.1.0")
+    .package(url: "https://github.com/vapor/jwt-kit", from: "5.1.0"),
+    .package(url: "https://github.com/vapor/sqlite-nio", from: "1.10.3"),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "1.3.3")
   ],
   targets: [
     .target(
@@ -25,7 +27,8 @@ let package = Package(
         .product(name: "WPFoundation", package: "WhyPeopleKit"),
         .product(name: "Logging", package: "swift-log"),
         .product(name: "AsyncHTTPClient", package: "async-http-client"),
-        .product(name: "JWTKit", package: "jwt-kit")
+        .product(name: "JWTKit", package: "jwt-kit"),
+        .product(name: "SQLiteNIO", package: "sqlite-nio", moduleAliases: ["CSQLite": "_CSQLite"])
       ]
     ),
     .testTarget(
@@ -33,7 +36,8 @@ let package = Package(
       dependencies: [
         "RudeusServer",
         .product(name: "WPSnapshotTesting", package: "WhyPeopleKit"),
-        .product(name: "HummingbirdTesting", package: "hummingbird")
+        .product(name: "HummingbirdTesting", package: "hummingbird"),
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ],
       exclude: ["__Snapshots__"]
     ),

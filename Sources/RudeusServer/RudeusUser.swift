@@ -1,14 +1,14 @@
-import Foundation
 import JWTKit
+import WPFoundation
 
 // MARK: - RudeusUser
 
 /// A user data type.
 public struct RudeusUser: Hashable, Sendable {
-  public let id: UUID
+  public let id: UUIDV7
   public let name: String
 
-  public init(id: UUID, name: String) {
+  public init(id: UUIDV7, name: String) {
     self.id = id
     self.name = name
   }
@@ -24,7 +24,7 @@ extension RudeusUser: JWTPayload {
 // MARK: - Mocks
 
 extension RudeusUser {
-  public static let rudeus = Self(id: UUID(), name: "Rudeus Greyrat")
-  public static let whyPeople = Self(id: UUID(), name: "why_people")
-  public static let matthew = Self(id: UUID(), name: "Matthew")
+  public static let rudeus = Self(id: UUIDV7(), name: "Rudeus Greyrat")
+  public static let whyPeople = Self(id: UUIDV7(), name: "why_people")
+  public static let matthew = Self(id: UUIDV7(), name: "Matthew")
 }

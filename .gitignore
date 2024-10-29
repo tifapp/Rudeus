@@ -8,3 +8,6 @@ DerivedData/
 .netrc
 .env.*
 .env
+*.o
+*.d
+*.deps
