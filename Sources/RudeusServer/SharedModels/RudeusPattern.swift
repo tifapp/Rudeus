@@ -75,8 +75,12 @@ extension RudeusPattern {
   }
 
   private var variableName: String {
-    let name = self.name.split(separator: " ").map { $0.lowercased().firstCharacterCapitalized }
+    let name = self.name.split(separator: " ")
+      .map {
+        $0.lowercased().firstCharacterCapitalized
+      }
       .joined()
+      .replacing(/[\(\)$@\&\{\}#\*,\".;:'!?<>|\-\\]/, with: "")
     guard let first = name.first else { return "pattern" }
     return first.lowercased() + name.dropFirst()
   }

@@ -10,7 +10,7 @@ import Logging
 public func rudeus(host: String, port: Int) async throws {
   LoggingSystem.bootstrapWithRudeus()
   #if DEBUG
-    let env = try await RudeusServerEnvironment.debug(host: host, port: port)
+    let env = await RudeusServerEnvironment.debug(host: host, port: port)
   #else
     let env = try await RudeusServerEnvironment.production(host: host, port: port)
   #endif

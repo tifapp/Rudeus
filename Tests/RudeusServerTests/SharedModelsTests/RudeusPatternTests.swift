@@ -16,6 +16,18 @@ struct RudeusPatternTests {
     assertSnapshot(of: pattern.tiFTypescript(), as: .tiFTS)
   }
 
+  @Test("Weird Name Typescript")
+  func weirdNameTS() {
+    let pattern = RudeusPattern(
+      name:
+        "Events' and Parameters' things to do and stuff like _______ that #&*(#&(#&(*#&*(&(&*#(*&*(&!!!!!!}{}{\"",
+      user: .whyPeople,
+      ahapPattern: .eventsAndParameters,
+      platform: .android
+    )
+    assertSnapshot(of: pattern.tiFTypescript(), as: .tiFTS)
+  }
+
   @Test("Only Events Typescript")
   func onlyEventsTS() {
     let pattern = RudeusPattern(
