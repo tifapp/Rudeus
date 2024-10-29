@@ -12,7 +12,8 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
     .package(url: "https://github.com/mhayes853/WhyPeopleKit", branch: "dev"),
     .package(url: "https://github.com/apple/swift-log", from: "1.6.1"),
-    .package(url: "https://github.com/swift-server/async-http-client", from: "1.23.1")
+    .package(url: "https://github.com/swift-server/async-http-client", from: "1.23.1"),
+    .package(url: "https://github.com/vapor/jwt-kit", from: "5.1.0")
   ],
   targets: [
     .target(
@@ -23,7 +24,8 @@ let package = Package(
         .product(name: "WPHaptics", package: "WhyPeopleKit"),
         .product(name: "WPFoundation", package: "WhyPeopleKit"),
         .product(name: "Logging", package: "swift-log"),
-        .product(name: "AsyncHTTPClient", package: "async-http-client")
+        .product(name: "AsyncHTTPClient", package: "async-http-client"),
+        .product(name: "JWTKit", package: "jwt-kit")
       ]
     ),
     .testTarget(
