@@ -58,4 +58,23 @@ struct RudeusDatabaseTests {
     patterns = try await self.database.patterns()
     expectNoDifference(patterns, [pattern1, pattern2])
   }
+
+  @Test("Throws Error when Trying to Save Pattern for Another User")
+  func cannotSaveAnotherUserPattern() async throws {
+    let user1 = try await self.database.createUser(named: "Blob")
+    let user2 = try await self.database.createUser(named: "Blob Jr.")
+
+    var pattern = RudeusPattern(
+      name: "Blob's Pattern",
+      user: user1,
+      ahapPattern: .eventsAndParameters,
+      platform: .iOS
+    )
+    try await self.database.save(pattern: pattern)
+    pattern.user = user2
+
+    await #expect(throws: RudeusDatabaseError.unauthorizedPatternSave) {
+      try await self.database.save(pattern: pattern)
+    }
+  }
 }

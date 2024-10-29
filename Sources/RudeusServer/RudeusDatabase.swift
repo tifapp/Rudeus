@@ -64,6 +64,20 @@ extension RudeusDatabase {
   ///
   /// - Parameter pattern: A ``RudeusPattern``.
   public func save(pattern: RudeusPattern) async throws {
+    let rows = try await self.sqlite.query(
+      """
+      SELECT u.id as userId
+      FROM Patterns p
+      LEFT JOIN Users u
+        ON u.id = p.userId
+      WHERE p.id = ?
+      """,
+      [.uuid(pattern.id)]
+    )
+    let userId = rows.compactMap { $0.uuidv7(column: "userId") }.first
+    guard userId == nil || userId == pattern.user.id else {
+      throw RudeusDatabaseError.unauthorizedPatternSave
+    }
     _ = try await self.sqlite.query(
       """
       INSERT INTO Patterns (id, userId, name, ahapData, platform)
@@ -97,7 +111,8 @@ extension RudeusDatabase {
         """
         SELECT p.*, u.name AS username
         FROM Patterns p
-        LEFT JOIN Users u ON u.id = p.userId
+        LEFT JOIN Users u
+          ON u.id = p.userId
         ORDER BY lastUpdatedAt DESC
         """
       )
@@ -117,6 +132,12 @@ extension RudeusDatabase {
       )
     }
   }
+}
+
+// MAKR: - Error
+
+public enum RudeusDatabaseError: Hashable, Sendable, Error {
+  case unauthorizedPatternSave
 }
 
 // MARK: - Migrations
