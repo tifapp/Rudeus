@@ -9,7 +9,7 @@ struct RudeusSlackMessageTests {
   func slackBlocksIOS() {
     let pattern = RudeusPattern(
       name: "Events and Parameters",
-      username: "why_people",
+      user: .whyPeople,
       ahapPattern: .eventsAndParameters,
       platform: .iOS
     )
@@ -23,7 +23,7 @@ struct RudeusSlackMessageTests {
   func slackBlocksAndroid() {
     let pattern = RudeusPattern(
       name: "Events and Parameters",
-      username: "why_people",
+      user: .whyPeople,
       ahapPattern: .eventsAndParameters,
       platform: .android
     )

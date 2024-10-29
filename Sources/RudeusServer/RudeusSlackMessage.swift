@@ -17,7 +17,7 @@ public struct RudeusSlackMessage: Hashable, Sendable, Codable {
       blocks.append(.section("🛠️ _This message was sent for development purposes, please ignore._"))
     #endif
     blocks.append(contentsOf: [
-      .section("*\(pattern.username)* has shared a new haptic pattern named *\(pattern.name)*"),
+      .section("*\(pattern.user.name)* has shared a new haptic pattern named *\(pattern.name)*"),
       .section(pattern.platform == .iOS ? "*Platform:* 📱 iOS" : "*Platform:* 🤖 Android"),
       .section("```\n\(pattern.tiFTypescript())```")
     ])

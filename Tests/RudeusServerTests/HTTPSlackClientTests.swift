@@ -14,7 +14,7 @@ struct HTTPClientSlackClientTests {
     await #expect(throws: Never.self) {
       let pattern = RudeusPattern(
         name: "Test",
-        username: "Matthew",
+        user: .matthew,
         ahapPattern: .eventsAndParameters,
         platform: .iOS
       )

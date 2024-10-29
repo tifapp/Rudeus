@@ -6,21 +6,21 @@ import WPHaptics
 /// A user uploaded haptic pattern.
 public struct RudeusPattern: Hashable, Sendable, Codable {
   public let id: UUIDV7
+  public let user: RudeusUser
   public let name: String
-  public let username: String
   public let ahapPattern: AHAPPattern
   public let platform: Platform
 
   public init(
     id: UUIDV7 = UUIDV7(),
     name: String,
-    username: String,
+    user: RudeusUser,
     ahapPattern: AHAPPattern,
     platform: Platform
   ) {
     self.id = id
     self.name = name
-    self.username = username
+    self.user = user
     self.ahapPattern = ahapPattern
     self.platform = platform
   }
@@ -70,7 +70,7 @@ extension RudeusPattern {
     """
     // Version: \(self.ahapPattern.version)
     //
-    // "\(self.name)" by \(self.username)
+    // "\(self.name)" by \(self.user.name)
     """
   }
 

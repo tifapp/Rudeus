@@ -9,7 +9,7 @@ struct RudeusPatternTests {
   func emptyTS() {
     let pattern = RudeusPattern(
       name: "Test Empty",
-      username: "whypeople",
+      user: .whyPeople,
       ahapPattern: AHAPPattern(),
       platform: .iOS
     )
@@ -20,7 +20,7 @@ struct RudeusPatternTests {
   func onlyEventsTS() {
     let pattern = RudeusPattern(
       name: "Only Events",
-      username: "why_people",
+      user: .whyPeople,
       ahapPattern: .eventsOnly,
       platform: .iOS
     )
@@ -31,7 +31,7 @@ struct RudeusPatternTests {
   func eventsAndParametersTS() {
     let pattern = RudeusPattern(
       name: "Events and Parameters",
-      username: "why_people",
+      user: .whyPeople,
       ahapPattern: .eventsAndParameters,
       platform: .android
     )
