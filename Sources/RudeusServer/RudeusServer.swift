@@ -2,7 +2,7 @@ import Hummingbird
 import JWTKit
 import Logging
 
-private let logger = Logger(label: "rudeus.main")
+private let logger = Logger(label: "rudeus.server")
 
 // MARK: - Rudeus
 
@@ -10,5 +10,14 @@ private let logger = Logger(label: "rudeus.main")
 ///
 /// - Parameter env: The ``RudeusServerEnvironment`` to use.
 public func rudeus(environment env: RudeusServerEnvironment) async throws {
-  logger.info("Started Rudeus Server on \(env.host):\(env.port)")
+  let router = Router(context: RudeusRequestContext.self)
+  let application = Application(
+    router: router,
+    configuration: ApplicationConfiguration(
+      address: .hostname(env.host, port: env.port),
+      serverName: "rudeus"
+    ),
+    logger: logger
+  )
+  try await application.run()
 }
