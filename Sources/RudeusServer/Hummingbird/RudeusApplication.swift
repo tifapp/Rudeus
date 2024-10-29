@@ -45,6 +45,10 @@ extension RudeusApplication {
     let request = try await request.decode(as: RudeusRegisterRequest.self, context: context)
     let user = try await self.environment.database.createUser(named: request.name)
     let token = try await self.environment.keys.sign(user)
+    context.logger.info(
+      "Registered new user with name: \(user.name).",
+      metadata: ["requestedName": .string(request.name), "id": "\(user.id)"]
+    )
     return EditedResponse(
       status: .created,
       response: RudeusRegisterResponse(id: user.id, name: user.name, token: token)
@@ -61,6 +65,10 @@ extension RudeusApplication {
   ) async throws -> EditedResponse<RudeusPattern> {
     let user = try context.requireUser()
     let request = try await request.decode(as: RudeusSavePatternRequest.self, context: context)
+    if let id = request.id, !(try await self.environment.database.patternExists(with: id)) {
+      throw HTTPError(.notFound)
+    }
+
     let pattern = RudeusPattern(
       id: request.id ?? UUIDV7(),
       name: request.name,
@@ -68,10 +76,23 @@ extension RudeusApplication {
       ahapPattern: request.ahapPattern,
       platform: request.platform
     )
-    try await self.environment.database.save(pattern: pattern)
-    try await self.environment.slackClient.send(
-      message: .patternShared(channelId: self.environment.slackChannelId, pattern)
-    )
+    do {
+      try await self.environment.database.save(pattern: pattern)
+      context.logger.info("Saved pattern with id: \(pattern.id).")
+    } catch RudeusDatabaseError.unauthorizedPatternSave {
+      throw HTTPError(.forbidden)
+    }
+
+    do {
+      try await self.environment.slackClient.send(
+        message: .patternShared(channelId: self.environment.slackChannelId, pattern)
+      )
+    } catch {
+      context.logger.error(
+        "Failed to send slack message for pattern with id: \(pattern.id).",
+        metadata: ["slackChannelId": .string(self.environment.slackChannelId)]
+      )
+    }
     return EditedResponse(status: request.id != nil ? .ok : .created, response: pattern)
   }
 }

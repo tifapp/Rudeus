@@ -26,12 +26,12 @@ public struct RudeusAuthenticationMiddleware: RouterMiddleware {
     guard splits.count == 2 else {
       return try await next(input, context)
     }
+    var context = context
     do {
-      var context = context
       context.user = try await self.keys.verify(String(splits[1]), as: RudeusUser.self)
-      return try await next(input, context)
     } catch {
       return try await next(input, context)
     }
+    return try await next(input, context)
   }
 }

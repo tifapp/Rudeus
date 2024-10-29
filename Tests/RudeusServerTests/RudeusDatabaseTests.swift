@@ -59,6 +59,25 @@ struct RudeusDatabaseTests {
     expectNoDifference(patterns, [pattern1, pattern2])
   }
 
+  @Test("Pattern Exists After Creating It")
+  func patternExists() async throws {
+    let user = try await self.database.createUser(named: "Blob")
+    let pattern = RudeusPattern(
+      name: "Blob's Pattern",
+      user: user,
+      ahapPattern: .eventsAndParameters,
+      platform: .iOS
+    )
+
+    var exists = try await self.database.patternExists(with: pattern.id)
+    #expect(!exists)
+
+    try await self.database.save(pattern: pattern)
+
+    exists = try await self.database.patternExists(with: pattern.id)
+    #expect(exists)
+  }
+
   @Test("Throws Error when Trying to Save Pattern for Another User")
   func cannotSaveAnotherUserPattern() async throws {
     let user1 = try await self.database.createUser(named: "Blob")

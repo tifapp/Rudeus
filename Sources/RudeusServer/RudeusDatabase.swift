@@ -101,6 +101,22 @@ extension RudeusDatabase {
   }
 }
 
+// MARK: - Pattern Exists
+
+extension RudeusDatabase {
+  /// Checks if a pattern with the specified `id` exists.
+  ///
+  /// - Parameter id: The id of the pattern to check.
+  /// - Returns: True if the pattern with the specified `id` exists.
+  public func patternExists(with id: UUIDV7) async throws -> Bool {
+    let rows = try await self.sqlite.query(
+      "SELECT TRUE FROM Patterns WHERE id = ?",
+      [.uuid(id)]
+    )
+    return !rows.isEmpty
+  }
+}
+
 // MARK: - Patterns
 
 extension RudeusDatabase {

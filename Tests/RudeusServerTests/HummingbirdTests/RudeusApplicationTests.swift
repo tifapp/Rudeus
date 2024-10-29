@@ -1,8 +1,8 @@
-import Foundation
 import Hummingbird
 import HummingbirdTesting
 import RudeusServer
 import Testing
+import WPFoundation
 
 @Suite("RudeusApplication tests")
 struct RudeusApplicationTests {
@@ -70,6 +70,88 @@ struct RudeusApplicationTests {
 
       let patterns = try await self.patterns(client: client)
       #expect(patterns == [pattern])
+    }
+  }
+
+  @Test("403s When Attempting to Edit Pattern Owned by Another User")
+  func forbiddenEditPattern() async throws {
+    try await self.app.test(.router) { client in
+      let token = try await self.register(name: "Blob", client: client)
+      let token2 = try await self.register(name: "Bitchell Dickle", client: client)
+
+      var patternRequest = RudeusSavePatternRequest(
+        name: "Test",
+        ahapPattern: .eventsAndParameters,
+        platform: .android
+      )
+      let pattern = try await self.savePattern(
+        request: patternRequest,
+        token: token,
+        expectedStatus: .created,
+        client: client
+      )
+
+      patternRequest = RudeusSavePatternRequest(
+        id: pattern.id,
+        name: "Modified Pattern",
+        ahapPattern: .eventsOnly,
+        platform: .android
+      )
+      await #expect(throws: Error.self) {
+        _ = try await self.savePattern(
+          request: patternRequest,
+          token: token2,
+          expectedStatus: .forbidden,
+          client: client
+        )
+      }
+
+      let patterns = try await self.patterns(client: client)
+      #expect(patterns == [pattern])
+    }
+  }
+
+  @Test("Save Pattern with Invalid Token Returns 401")
+  func invalidTokenPatternSave() async throws {
+    try await self.app.test(.router) { client in
+      let patternRequest = RudeusSavePatternRequest(
+        name: "Test",
+        ahapPattern: .eventsAndParameters,
+        platform: .android
+      )
+      await #expect(throws: Error.self) {
+        _ = try await self.savePattern(
+          request: patternRequest,
+          token: "klsdhjkjshkkjdhsjkdhjk",
+          expectedStatus: .unauthorized,
+          client: client
+        )
+      }
+      let patterns = try await self.patterns(client: client)
+      #expect(patterns == [])
+    }
+  }
+
+  @Test("Attempt to Edit Non-Existent Pattern Returns 404")
+  func editNonExistingPattern() async throws {
+    try await self.app.test(.router) { client in
+      let token = try await self.register(name: "Blob", client: client)
+      let patternRequest = RudeusSavePatternRequest(
+        id: UUIDV7(),
+        name: "Test",
+        ahapPattern: .eventsAndParameters,
+        platform: .android
+      )
+      await #expect(throws: Error.self) {
+        _ = try await self.savePattern(
+          request: patternRequest,
+          token: token,
+          expectedStatus: .notFound,
+          client: client
+        )
+      }
+      let patterns = try await self.patterns(client: client)
+      #expect(patterns == [])
     }
   }
 
