@@ -1,23 +1,19 @@
-import Hummingbird
-import JWTKit
 import Logging
-
-private let logger = Logger(label: "rudeus.server")
 
 // MARK: - Rudeus
 
 /// Runs the Rudeus server.
 ///
-/// - Parameter env: The ``RudeusServerEnvironment`` to use.
-public func rudeus(environment env: RudeusServerEnvironment) async throws {
-  let router = Router(context: RudeusRequestContext.self)
-  let application = Application(
-    router: router,
-    configuration: ApplicationConfiguration(
-      address: .hostname(env.host, port: env.port),
-      serverName: "rudeus"
-    ),
-    logger: logger
-  )
-  try await application.run()
+/// - Parameter
+///   - host: The server host.
+///   - port: The server port.
+public func rudeus(host: String, port: Int) async throws {
+  LoggingSystem.bootstrapWithRudeus()
+  #if DEBUG
+    let env = try await RudeusServerEnvironment.debug(host: host, port: port)
+  #else
+    let env = try await RudeusServerEnvironment.production(host: host, port: port)
+  #endif
+  let application = RudeusApplication(environment: env)
+  try await application.runService()
 }

@@ -11,12 +11,6 @@ struct RudeusArguments: AsyncParsableCommand {
   var port: Int = 8080
 
   func run() async throws {
-    LoggingSystem.bootstrapWithRudeus()
-    #if DEBUG
-      let env = try await RudeusServerEnvironment.debug(host: self.hostname, port: self.port)
-    #else
-      let env = try await RudeusServerEnvironment.production(host: self.hostname, port: self.port)
-    #endif
-    try await rudeus(environment: env)
+    try await rudeus(host: self.hostname, port: self.port)
   }
 }

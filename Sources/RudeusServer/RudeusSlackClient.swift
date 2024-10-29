@@ -7,7 +7,7 @@ import Synchronization
 // MARK: - RudeusSlackClient
 
 /// A protocol for slack interactions.
-public protocol RudeusSlackClient {
+public protocol RudeusSlackClient: Sendable {
   /// Sends a message to slack.
   ///
   /// - Parameter message: A ``RudeusSlackMessage``.

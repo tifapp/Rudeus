@@ -3,7 +3,7 @@ import JWTKit
 
 // MARK: - RudeusServerEnvironment
 
-public struct RudeusServerEnvironment {
+public struct RudeusServerEnvironment: Sendable {
   /// The host for the HTTP server.
   public var host: String
 
