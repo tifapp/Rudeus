@@ -15,7 +15,8 @@ struct HTTPClientSlackClientTests {
       let pattern = RudeusPattern(
         name: "Test",
         username: "Matthew",
-        ahapPattern: .eventsAndParameters
+        ahapPattern: .eventsAndParameters,
+        platform: .iOS
       )
       try await client.send(
         message: .patternShared(channelId: env.assume("SLACK_CHANNEL_ID"), pattern)

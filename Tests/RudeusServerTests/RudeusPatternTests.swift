@@ -10,7 +10,8 @@ struct RudeusPatternTests {
     let pattern = RudeusPattern(
       name: "Test Empty",
       username: "whypeople",
-      ahapPattern: AHAPPattern()
+      ahapPattern: AHAPPattern(),
+      platform: .iOS
     )
     assertSnapshot(of: pattern.tiFTypescript(), as: .tiFTS)
   }
@@ -20,7 +21,8 @@ struct RudeusPatternTests {
     let pattern = RudeusPattern(
       name: "Only Events",
       username: "why_people",
-      ahapPattern: .eventsOnly
+      ahapPattern: .eventsOnly,
+      platform: .iOS
     )
     assertSnapshot(of: pattern.tiFTypescript(), as: .tiFTS)
   }
@@ -30,7 +32,8 @@ struct RudeusPatternTests {
     let pattern = RudeusPattern(
       name: "Events and Parameters",
       username: "why_people",
-      ahapPattern: .eventsAndParameters
+      ahapPattern: .eventsAndParameters,
+      platform: .android
     )
     assertSnapshot(of: pattern.tiFTypescript(), as: .tiFTS)
   }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "e5c911ee64dbf2bd2ae7fc1355964e9a6f575ee4d2c5463910995fcb40a25731",
+  "originHash" : "0f3aad3b4eb6abddcc0a76ffcf0d51b07c1e8cd74c2d2ba650371cb5159189b9",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -304,7 +304,7 @@
       "location" : "https://github.com/mhayes853/WhyPeopleKit",
       "state" : {
         "branch" : "dev",
-        "revision" : "498d753dc25e08ca2f20517aff141807e86630c9"
+        "revision" : "81b2087c9d631bb81fe4df0867876905623b7224"
       }
     },
     {

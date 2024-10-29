@@ -20,7 +20,7 @@ extension AHAPPattern {
         parameters: [.audioVolume: 0.5]
       )
     ),
-    .event(.audioContinuous(time: 2, duration: 2, waveformPath: "dead.caf"))
+    .event(.audioContinuous(time: 2, duration: 2, parameters: [.audioPan: 0.8, .audioVolume: 0.3]))
   )
 
   static let eventsAndParameters = Self(
@@ -40,11 +40,19 @@ extension AHAPPattern {
         time: 0.5,
         waveformPath: "bang.caf",
         waveformLoopEnabled: true,
+        duration: 3.0,
         parameters: [.audioVolume: 0.5]
       )
     ),
     .parameterCurve(id: .audioPanControl, time: 0, controlPoints: [.point(time: 0, value: 1)]),
-    .event(.audioContinuous(time: 2, duration: 2, waveformPath: "dead.caf")),
+    .event(
+      .audioContinuous(
+        time: 2,
+        duration: 2,
+        waveformUseVolumeEnvelope: true,
+        parameters: [.audioBrightness: 0.9, .audioVolume: 0.8, .audioPitch: 0.6]
+      )
+    ),
     .parameterCurve(
       id: .hapticIntensityControl,
       time: 0,

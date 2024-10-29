@@ -10,14 +10,30 @@ export const eventsAndParameters = hapticPattern(
       HapticSharpness: 0.67 
     }),
     transientEvent(0.1, { HapticIntensity: 0.8, HapticSharpness: 0.2 }),
-    soundEffectEvent("bang.caf", 0.5, { AudioVolume: 0.5 }),
-    continuousSoundEvent("dead.caf", 2.0, 2.0, {})
+    soundEffectEvent(
+      "bang.caf",
+      0.5,
+      { AudioVolume: 0.5 },
+      {
+        EventWaveformUseVolumeEnvelope: false,
+        EventWaveformLoopEnabled: false,
+        EventDuration: 3.0
+      }
+    ),
+    continuousSoundEvent(
+      2.0,
+      2.0,
+      { 
+        AudioBrightness: 0.9,
+        AudioPitch: 0.6,
+        AudioVolume: 0.8 
+      },
+      { EventWaveformUseVolumeEnvelope: true }
+    )
   ),
   parameters(
     dynamicParameter("AudioReleaseTimeControl", 0.4, 0.5),
-    parameterCurve("AudioPanControl", 0.0, [
-      keyFrame(1.0, 0.0)
-    ]),
+    parameterCurve("AudioPanControl", 0.0, [keyFrame(1.0, 0.0)]),
     parameterCurve("HapticIntensityControl", 0.0, [
       keyFrame(0.1, 0.0),
       keyFrame(0.8, 0.5),

@@ -9,12 +9,29 @@ public struct RudeusPattern: Hashable, Sendable, Codable {
   public let name: String
   public let username: String
   public let ahapPattern: AHAPPattern
+  public let platform: Platform
 
-  public init(id: UUID = UUID(), name: String, username: String, ahapPattern: AHAPPattern) {
+  public init(
+    id: UUID = UUID(),
+    name: String,
+    username: String,
+    ahapPattern: AHAPPattern,
+    platform: Platform
+  ) {
     self.id = id
     self.name = name
     self.username = username
     self.ahapPattern = ahapPattern
+    self.platform = platform
+  }
+}
+
+// MARK: - Platform
+
+extension RudeusPattern {
+  public enum Platform: String, Hashable, Sendable, Codable {
+    case iOS = "ios"
+    case android = "android"
   }
 }
 
@@ -111,38 +128,56 @@ extension AHAPPattern.ParameterCurve {
 
   fileprivate func controlPointsTiFTS() -> String {
     guard !self.controlPoints.isEmpty else { return "[]" }
-    let entries = self.controlPoints.map { point in
-      "      keyFrame(\(point.value), \(point.time))"
+    let isMultiline = self.controlPoints.count > 2
+    let entries = self.controlPoints.map { "keyFrame(\($0.value), \($0.time))" }
+    if isMultiline {
+      return "[\n\(entries.map { "      \($0)" }.joined(separator: ",\n"))\n    ]"
     }
-    return "[\n\(entries.joined(separator: ",\n"))\n    ]"
+    return "[\(entries.joined(separator: ", "))]"
   }
 }
 
 extension AHAPPattern.Event {
   fileprivate func tiFTS() -> String {
+    let space = "\n      "
+    let endSpace = "\n    "
     switch self {
     case let .audioContinuous(e):
+      let properties = "{ EventWaveformUseVolumeEnvelope: \(e.waveformUseVolumeEnvelope) }"
       return
-        "    continuousSoundEvent(\"\(e.waveformPath)\", \(e.time), \(e.duration), \(e.parameters.tiFTS()))"
+        "    continuousSoundEvent(\(space)\(e.time),\(space)\(e.duration),\(space)\(e.parameters.tiFTS(newlineIndent: 8)),\(space)\(properties)\(endSpace))"
     case let .audioCustom(e):
-      return "    soundEffectEvent(\"\(e.waveformPath)\", \(e.time), \(e.parameters.tiFTS()))"
+      let propertySpace = "\n        "
+      let durationProperty =
+        if let d = e.duration {
+          ",\(propertySpace)EventDuration: \(d)"
+        } else {
+          ""
+        }
+      let properties =
+        "{\(propertySpace)EventWaveformUseVolumeEnvelope: \(e.waveformUseVolumeEnvelope),\(propertySpace)EventWaveformLoopEnabled: \(e.waveformLoopEnabled)\(durationProperty)\(space)}"
+      return
+        "    soundEffectEvent(\(space)\"\(e.waveformPath)\",\(space)\(e.time),\(space)\(e.parameters.tiFTS(newlineIndent: 8)),\(space)\(properties)\(endSpace))"
     case let .hapticContinuous(e):
-      return "    continuousEvent(\(e.time), \(e.duration), \(e.parameters.tiFTS()))"
+      return
+        "    continuousEvent(\(e.time), \(e.duration), \(e.parameters.tiFTS(newlineIndent: 6)))"
     case let .hapticTransient(e):
-      return "    transientEvent(\(e.time), \(e.parameters.tiFTS()))"
+      return "    transientEvent(\(e.time), \(e.parameters.tiFTS(newlineIndent: 6)))"
     }
   }
 }
 
-extension _AHAPEventParameters {
-  fileprivate func tiFTS() -> String {
+extension AHAPPattern.EventParameters {
+  fileprivate func tiFTS(newlineIndent: Int) -> String {
     guard !self.entries.isEmpty else { return "{}" }
     let isMultiline = self.entries.count > 2
     let objectEntries = self.entries.map { (key, value) in "\(key.rawValue): \(value)" }.sorted()
     if isMultiline {
-      return "{ \n\(objectEntries.map { "      \($0)" }.joined(separator: ",\n")) \n    }"
-    } else {
-      return "{ \(objectEntries.joined(separator: ", ")) }"
+      let entryIndent = String(repeating: " ", count: newlineIndent)
+      let endBraceIndent = String(repeating: " ", count: newlineIndent - 2)
+      return
+        "{ \n\(objectEntries.map { "\(entryIndent)\($0)" }.joined(separator: ",\n")) \n\(endBraceIndent)}"
     }
+    return "{ \(objectEntries.joined(separator: ", ")) }"
   }
 }
