@@ -1,6 +1,5 @@
 import AsyncHTTPClient
 import Foundation
-import Hummingbird
 import NIOHTTP1
 
 // MARK: - RudeusSlackClient
@@ -19,8 +18,8 @@ public protocol RudeusSlackClient {
 public struct HTTPSlackClient {
   private let apiKey: String
 
-  public init(environment: Environment) {
-    self.apiKey = environment.assume("SLACK_API_TOKEN")
+  public init(apiKey: String) {
+    self.apiKey = apiKey
   }
 }
 
