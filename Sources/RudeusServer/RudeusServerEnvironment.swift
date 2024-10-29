@@ -75,7 +75,7 @@ extension RudeusServerEnvironment {
   ///   - host: The server host.
   ///   - port: The server port.
   /// - Returns: A ``RudeusServerEnvironment``.
-  public static func debug(host: String, port: Int) async throws -> Self {
+  public static func debug(host: String, port: Int) async -> Self {
     let keys = JWTKeyCollection()
     await keys.add(hmac: "debug_secret", digestAlgorithm: .sha256)
     return Self(
