@@ -1,13 +1,14 @@
+import Hummingbird
+import JWTKit
 import Logging
 
 private let logger = Logger(label: "rudeus.main")
 
+// MARK: - Rudeus
+
 /// Runs the Rudeus server.
 ///
-/// - Parameters:
-///   - host: The host name.
-///   - port: The port.
-public func rudeus(host: String, port: Int) async throws {
-  LoggingSystem.bootstrapWithRudeus()
-  logger.info("Started Rudeus", metadata: ["host": .string(host), "port": "\(port)"])
+/// - Parameter env: The ``RudeusServerEnvironment`` to use.
+public func rudeus(environment env: RudeusServerEnvironment) async throws {
+  logger.info("Started Rudeus Server on \(env.host):\(env.port)")
 }

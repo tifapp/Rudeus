@@ -1,6 +1,8 @@
 import AsyncHTTPClient
 import Foundation
+import Logging
 import NIOHTTP1
+import Synchronization
 
 // MARK: - RudeusSlackClient
 
@@ -40,5 +42,27 @@ extension HTTPSlackClient: RudeusSlackClient {
 extension HTTPSlackClient {
   public enum SendMessageError: Error {
     case badResponse(status: HTTPResponseStatus)
+  }
+}
+
+// MARK: - EphemeralSlackClient
+
+private let logger = Logger(label: "rudeus.ephemeral.slack.client")
+
+/// A ``RudeusSlackClient`` that records slack messages in memory.
+public final class EphemeralSlackClient {
+  private let _messages = Mutex([RudeusSlackMessage]())
+
+  public var messages: [RudeusSlackMessage] {
+    self._messages.withLock { $0 }
+  }
+
+  public init() {}
+}
+
+extension EphemeralSlackClient: RudeusSlackClient {
+  public func send(message: RudeusSlackMessage) async throws {
+    self._messages.withLock { $0.append(message) }
+    logger.debug("Slack Message Sent", metadata: ["message": .string(String(describing: message))])
   }
 }
