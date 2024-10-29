@@ -12,3 +12,4 @@ DerivedData/
 *.deps
 *.swiftdeps
 *.swiftdeps~
+*.db
