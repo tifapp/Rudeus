@@ -86,21 +86,24 @@ extension RudeusDatabase {
     }
     _ = try await self.sqlite.query(
       """
-      INSERT INTO Patterns (id, userId, name, ahapData, platform)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO Patterns (id, userId, name, description, ahapData, platform)
+      VALUES (?, ?, ?, ?, ?, ?)
       ON CONFLICT (id) DO UPDATE
         SET
             name = ?,
             ahapData = ?,
+            description = ?,
             platform = ?,
             lastUpdatedAt = unixepoch('now', 'subsec')
       """,
       [
         .uuid(newPattern.id), .uuid(newPattern.user.id), .text(newPattern.name),
+        .text(newPattern.description),
         .blob(ByteBuffer(data: newPattern.ahapPattern.data())),
         .text(newPattern.platform.rawValue),
         .text(newPattern.name),
         .blob(ByteBuffer(data: newPattern.ahapPattern.data())),
+        .text(newPattern.description),
         .text(newPattern.platform.rawValue)
       ]
     )
@@ -129,21 +132,21 @@ extension RudeusDatabase {
 extension RudeusDatabase {
   /// Returns all the patterns stored in this database in last-save order.
   public func patterns() async throws -> [RudeusPattern] {
-    let rows = try await self.sqlite
-      .query(
-        """
-        SELECT p.*, u.name AS username
-        FROM Patterns p
-        LEFT JOIN Users u
-          ON u.id = p.userId
-        ORDER BY lastUpdatedAt DESC
-        """
-      )
+    let rows = try await self.sqlite.query(
+      """
+      SELECT p.*, u.name AS username
+      FROM Patterns p
+      LEFT JOIN Users u
+        ON u.id = p.userId
+      ORDER BY lastUpdatedAt DESC
+      """
+    )
     return try rows.map { row in
       let ahapBuffer = row.column("ahapData")!.blob!
       return RudeusPattern(
         id: row.uuidv7(column: "id")!,
         name: row.column("name")!.string!,
+        description: row.column("description")!.string!,
         user: RudeusUser(
           id: row.uuidv7(column: "userId")!,
           name: row.column("username")!.string!
@@ -181,6 +184,7 @@ extension RudeusDatabase {
         id BLOB NOT NULL PRIMARY KEY,
         userId BLOB NOT NULL,
         name TEXT NOT NULL,
+        description TEXT NOT NULL,
         ahapData BLOB NOT NULL,
         platform TEXT NOT NULL CHECK (platform IN ('ios', 'android')),
         lastUpdatedAt DATETIME NOT NULL DEFAULT (unixepoch('now', 'subsec')),

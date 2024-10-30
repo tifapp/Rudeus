@@ -2,7 +2,10 @@
 //
 // "Events and Parameters" by why_people
 //
-// No Description
+// Hello world, I am a
+// multiline description that should be commmented out on
+// each line.
+// And that includes whitespace too!
 
 export const eventsAndParameters = hapticPattern(
   events(

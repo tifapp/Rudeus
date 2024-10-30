@@ -25,6 +25,7 @@ struct RudeusApplicationTests {
 
       let patternRequest = RudeusSavePatternRequest(
         name: "Test",
+        description: "I am a fun pattern",
         ahapPattern: .eventsAndParameters,
         platform: .iOS
       )
@@ -47,6 +48,7 @@ struct RudeusApplicationTests {
 
       var patternRequest = RudeusSavePatternRequest(
         name: "Test",
+        description: "I am a fun pattern",
         ahapPattern: .eventsAndParameters,
         platform: .iOS
       )
@@ -60,6 +62,7 @@ struct RudeusApplicationTests {
       patternRequest = RudeusSavePatternRequest(
         id: pattern.id,
         name: "Modified Pattern",
+        description: "I am a fun agian",
         ahapPattern: .eventsAndParameters,
         platform: .iOS
       )
@@ -84,6 +87,7 @@ struct RudeusApplicationTests {
 
       var patternRequest = RudeusSavePatternRequest(
         name: "Test",
+        description: "I am a fun pattern",
         ahapPattern: .eventsAndParameters,
         platform: .android
       )
@@ -97,6 +101,7 @@ struct RudeusApplicationTests {
       patternRequest = RudeusSavePatternRequest(
         id: pattern.id,
         name: "Modified Pattern",
+        description: "I am a fun pattern possibly",
         ahapPattern: .eventsOnly,
         platform: .android
       )
@@ -119,6 +124,7 @@ struct RudeusApplicationTests {
     try await self.app.test(.router) { client in
       let patternRequest = RudeusSavePatternRequest(
         name: "Test",
+        description: "I am a fun pattern",
         ahapPattern: .eventsAndParameters,
         platform: .android
       )
@@ -142,6 +148,7 @@ struct RudeusApplicationTests {
       let patternRequest = RudeusSavePatternRequest(
         id: UUIDV7(),
         name: "Test",
+        description: "I am a fun pattern",
         ahapPattern: .eventsAndParameters,
         platform: .android
       )
@@ -197,6 +204,7 @@ struct RudeusApplicationTests {
         ahapPattern.version += 1
         #expect(body.ahapPattern == ahapPattern)
       }
+      #expect(body.description == request.description)
       #expect(body.platform == request.platform)
       return body
     }

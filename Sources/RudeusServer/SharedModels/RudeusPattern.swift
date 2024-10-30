@@ -7,6 +7,7 @@ import WPHaptics
 public struct RudeusPattern: Hashable, Sendable, Codable {
   public let id: UUIDV7
   public var user: RudeusUser
+  public var description: String
   public var name: String
   public var ahapPattern: AHAPPattern
   public var platform: Platform
@@ -14,12 +15,14 @@ public struct RudeusPattern: Hashable, Sendable, Codable {
   public init(
     id: UUIDV7 = UUIDV7(),
     name: String,
+    description: String = "",
     user: RudeusUser,
     ahapPattern: AHAPPattern,
     platform: Platform
   ) {
     self.id = id
     self.name = name
+    self.description = description
     self.user = user
     self.ahapPattern = ahapPattern
     self.platform = platform
@@ -67,11 +70,18 @@ extension RudeusPattern {
   }
 
   private var headerComment: String {
-    """
-    // Version: \(self.ahapPattern.version)
-    //
-    // "\(self.name)" by \(self.user.name)
-    """
+    let description =
+      self.description.isEmpty
+      ? "// No Description"
+      : self.description.split(separator: "\n").map { "// \($0)" }
+        .joined(separator: "\n")
+    return """
+      // Version: \(self.ahapPattern.version)
+      //
+      // "\(self.name)" by \(self.user.name)
+      //
+      \(description)
+      """
   }
 
   private var variableName: String {

@@ -23,6 +23,7 @@ struct RudeusSlackMessageTests {
   func slackBlocksAndroid() {
     let pattern = RudeusPattern(
       name: "Events and Parameters",
+      description: "This is a cool pattern",
       user: .whyPeople,
       ahapPattern: .eventsAndParameters,
       platform: .android

@@ -72,6 +72,7 @@ extension RudeusApplication {
     var pattern = RudeusPattern(
       id: request.id ?? UUIDV7(),
       name: request.name,
+      description: request.description,
       user: user,
       ahapPattern: request.ahapPattern,
       platform: request.platform

@@ -24,3 +24,7 @@ public struct RudeusPatternsResponse: Hashable, Sendable, ResponseCodable {
     self.patterns = patterns
   }
 }
+
+// MARK: - RudeusPattern
+
+extension RudeusPattern: ResponseCodable {}

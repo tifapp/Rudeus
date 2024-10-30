@@ -1,6 +1,8 @@
 // Version: 1
 //
 // "Only Events" by why_people
+//
+// No Description
 
 export const onlyEvents = hapticPattern(
   events(

@@ -49,6 +49,24 @@ struct RudeusPatternTests {
     )
     assertSnapshot(of: pattern.tiFTypescript(), as: .tiFTS)
   }
+
+  @Test("Multiline Description tiF Typescript")
+  func multilineDescription() {
+    let pattern = RudeusPattern(
+      name: "Events and Parameters",
+      description: """
+        Hello world, I am a
+        multiline description that should be commmented out on
+        each line.
+
+        And that includes whitespace too!
+        """,
+      user: .whyPeople,
+      ahapPattern: .eventsAndParameters,
+      platform: .android
+    )
+    assertSnapshot(of: pattern.tiFTypescript(), as: .tiFTS)
+  }
 }
 
 extension Snapshotting where Value == String, Format == String {
