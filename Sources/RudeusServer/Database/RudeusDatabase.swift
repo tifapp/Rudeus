@@ -63,7 +63,8 @@ extension RudeusDatabase {
   /// Saves the specified ``RudeusPattern`` in the database.
   ///
   /// - Parameter pattern: A ``RudeusPattern``.
-  public func save(pattern: RudeusPattern) async throws {
+  @discardableResult
+  public func save(pattern: RudeusPattern) async throws -> RudeusPattern {
     let rows = try await self.sqlite.query(
       """
       SELECT u.id as userId
@@ -75,8 +76,13 @@ extension RudeusDatabase {
       [.uuid(pattern.id)]
     )
     let userId = rows.compactMap { $0.uuidv7(column: "userId") }.first
-    guard userId == nil || userId == pattern.user.id else {
+    let patternExists = userId != nil
+    guard !patternExists || userId == pattern.user.id else {
       throw RudeusDatabaseError.unauthorizedPatternSave
+    }
+    var newPattern = pattern
+    if patternExists {
+      newPattern.ahapPattern.version += 1
     }
     _ = try await self.sqlite.query(
       """
@@ -90,14 +96,15 @@ extension RudeusDatabase {
             lastUpdatedAt = unixepoch('now', 'subsec')
       """,
       [
-        .uuid(pattern.id), .uuid(pattern.user.id), .text(pattern.name),
-        .blob(ByteBuffer(data: pattern.ahapPattern.data())),
-        .text(pattern.platform.rawValue),
-        .text(pattern.name),
-        .blob(ByteBuffer(data: pattern.ahapPattern.data())),
-        .text(pattern.platform.rawValue)
+        .uuid(newPattern.id), .uuid(newPattern.user.id), .text(newPattern.name),
+        .blob(ByteBuffer(data: newPattern.ahapPattern.data())),
+        .text(newPattern.platform.rawValue),
+        .text(newPattern.name),
+        .blob(ByteBuffer(data: newPattern.ahapPattern.data())),
+        .text(newPattern.platform.rawValue)
       ]
     )
+    return newPattern
   }
 }
 

@@ -1,8 +1,10 @@
+import CustomDump
 import Hummingbird
 import HummingbirdTesting
 import RudeusServer
 import Testing
 import WPFoundation
+import WPHaptics
 
 @Suite("RudeusApplication tests")
 struct RudeusApplicationTests {
@@ -69,7 +71,8 @@ struct RudeusApplicationTests {
       )
 
       let patterns = try await self.patterns(client: client)
-      #expect(patterns == [pattern])
+      expectNoDifference(patterns, [pattern])
+      #expect(pattern.ahapPattern.version == 2)
     }
   }
 
@@ -187,7 +190,13 @@ struct RudeusApplicationTests {
         #expect(body.id == id)
       }
       #expect(body.name == request.name)
-      #expect(body.ahapPattern == request.ahapPattern)
+      if expectedStatus == .created {
+        #expect(body.ahapPattern == request.ahapPattern)
+      } else {
+        var ahapPattern = request.ahapPattern
+        ahapPattern.version += 1
+        #expect(body.ahapPattern == ahapPattern)
+      }
       #expect(body.platform == request.platform)
       return body
     }

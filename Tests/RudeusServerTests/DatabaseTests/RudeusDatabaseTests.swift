@@ -54,6 +54,7 @@ struct RudeusDatabaseTests {
     pattern1.name = "Updated Pattern"
     try await self.database.save(pattern: pattern1)
     try await Task.sleep(for: .milliseconds(10))
+    pattern1.ahapPattern.version += 1
 
     patterns = try await self.database.patterns()
     expectNoDifference(patterns, [pattern1, pattern2])

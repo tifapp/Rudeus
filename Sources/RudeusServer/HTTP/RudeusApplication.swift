@@ -69,7 +69,7 @@ extension RudeusApplication {
       throw HTTPError(.notFound)
     }
 
-    let pattern = RudeusPattern(
+    var pattern = RudeusPattern(
       id: request.id ?? UUIDV7(),
       name: request.name,
       user: user,
@@ -77,7 +77,7 @@ extension RudeusApplication {
       platform: request.platform
     )
     do {
-      try await self.environment.database.save(pattern: pattern)
+      pattern = try await self.environment.database.save(pattern: pattern)
       context.logger.info("Saved pattern with id: \(pattern.id).")
     } catch RudeusDatabaseError.unauthorizedPatternSave {
       throw HTTPError(.forbidden)
