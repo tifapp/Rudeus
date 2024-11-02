@@ -18,7 +18,7 @@ export const onlyEvents = hapticPattern(
       { AudioVolume: 0.5 },
       {
         EventWaveformUseVolumeEnvelope: false,
-        EventWaveformLoopEnabled: false
+        EventWaveformLoopEnabled: true
       }
     ),
     continuousSoundEvent(

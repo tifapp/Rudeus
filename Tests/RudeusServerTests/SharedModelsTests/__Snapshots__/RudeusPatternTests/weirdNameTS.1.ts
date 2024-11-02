@@ -18,7 +18,7 @@ export const eventsAndParametersThingsToDoAndStuffLike_______That = hapticPatter
       { AudioVolume: 0.5 },
       {
         EventWaveformUseVolumeEnvelope: false,
-        EventWaveformLoopEnabled: false,
+        EventWaveformLoopEnabled: true,
         EventDuration: 3.0
       }
     ),
