@@ -60,6 +60,25 @@ struct RudeusDatabaseTests {
     expectNoDifference(patterns, [pattern1, pattern2])
   }
 
+  @Test("Increments Database Pattern Version After Multiple Saved")
+  func incrementsPatternVersion() async throws {
+    let user = try await self.database.createUser(named: "Blob")
+
+    var pattern = RudeusPattern(
+      name: "Blob's Pattern",
+      user: user,
+      ahapPattern: .eventsAndParameters,
+      platform: .iOS
+    )
+
+    try await self.database.save(pattern: pattern)
+    pattern.ahapPattern.version = 10
+    try await self.database.save(pattern: pattern)
+
+    let savedPattern = try #require(try await self.database.patterns().first)
+    expectNoDifference(savedPattern.ahapPattern.version, 2)
+  }
+
   @Test("Pattern Exists After Creating It")
   func patternExists() async throws {
     let user = try await self.database.createUser(named: "Blob")
