@@ -65,6 +65,14 @@ extension RudeusDatabase {
   /// - Parameter pattern: A ``RudeusPattern``.
   @discardableResult
   public func save(pattern: RudeusPattern) async throws -> RudeusPattern {
+    let userExists =
+      !(try await self.sqlite
+      .query(
+        "SELECT TRUE FROM Users WHERE id = ?",
+        [.uuid(pattern.user.id)]
+      )
+      .isEmpty)
+    guard userExists else { throw RudeusDatabaseError.userNotFound }
     let rows = try await self.sqlite.query(
       """
       SELECT u.id as userId, p.ahapData
@@ -165,6 +173,7 @@ extension RudeusDatabase {
 
 public enum RudeusDatabaseError: Hashable, Sendable, Error {
   case unauthorizedPatternSave
+  case userNotFound
 }
 
 // MARK: - Migrations

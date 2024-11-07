@@ -116,4 +116,17 @@ struct RudeusDatabaseTests {
       try await self.database.save(pattern: pattern)
     }
   }
+
+  @Test("Throws Error when Trying to Save Pattern for Non-Existent User")
+  func cannotSaveForNonExistentUser() async throws {
+    let pattern = RudeusPattern(
+      name: "Blob's Pattern",
+      user: RudeusUser(id: UUIDV7(), name: "Blob"),
+      ahapPattern: .eventsAndParameters,
+      platform: .iOS
+    )
+    await #expect(throws: RudeusDatabaseError.userNotFound) {
+      try await self.database.save(pattern: pattern)
+    }
+  }
 }
