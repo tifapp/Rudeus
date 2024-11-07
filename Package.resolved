@@ -1,5 +1,5 @@
 {
-  "originHash" : "962df91e779dce131079e162066ac5feef461c98165bce81ac9f2363ca12454d",
+  "originHash" : "939b9912c192d5d476bc32c306fd5c59faed9d39f21cbf6540931edca5749c4a",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -348,8 +348,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mhayes853/WhyPeopleKit",
       "state" : {
-        "branch" : "main",
-        "revision" : "e28fcaba1ea3198c0e98d56b1f6089768da10a99"
+        "revision" : "1b08f8c1e1ac4cafcf89e4e5cc893bb4995cf7ce",
+        "version" : "0.1.1"
       }
     },
     {
