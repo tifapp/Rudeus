@@ -54,7 +54,7 @@ struct RudeusDatabaseTests {
     pattern1.name = "Updated Pattern"
     try await self.database.save(pattern: pattern1)
     try await Task.sleep(for: .milliseconds(10))
-    pattern1.ahapPattern.version += 1
+    pattern1.version += 1
 
     patterns = try await self.database.patterns()
     expectNoDifference(patterns, [pattern1, pattern2])
@@ -72,11 +72,11 @@ struct RudeusDatabaseTests {
     )
 
     try await self.database.save(pattern: pattern)
-    pattern.ahapPattern.version = 10
+    pattern.version = 10
     try await self.database.save(pattern: pattern)
 
     let savedPattern = try #require(try await self.database.patterns().first)
-    expectNoDifference(savedPattern.ahapPattern.version, 2)
+    expectNoDifference(savedPattern.version, 2)
   }
 
   @Test("Pattern Exists After Creating It")

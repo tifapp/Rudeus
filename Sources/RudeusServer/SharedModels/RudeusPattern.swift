@@ -11,6 +11,7 @@ public struct RudeusPattern: Hashable, Sendable, Codable {
   public var name: String
   public var ahapPattern: AHAPPattern
   public var platform: Platform
+  public var version: Int
 
   public init(
     id: UUIDV7 = UUIDV7(),
@@ -18,7 +19,8 @@ public struct RudeusPattern: Hashable, Sendable, Codable {
     description: String = "",
     user: RudeusUser,
     ahapPattern: AHAPPattern,
-    platform: Platform
+    platform: Platform,
+    version: Int = 1
   ) {
     self.id = id
     self.name = name
@@ -26,6 +28,7 @@ public struct RudeusPattern: Hashable, Sendable, Codable {
     self.user = user
     self.ahapPattern = ahapPattern
     self.platform = platform
+    self.version = version
   }
 }
 

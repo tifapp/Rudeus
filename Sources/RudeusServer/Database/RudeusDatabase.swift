@@ -15,6 +15,7 @@ public final actor RudeusDatabase {
   private init(storage: SQLiteConnection.Storage) async throws {
     self.sqlite = try await SQLiteConnection.open(storage: storage)
     try await self.migrateV1()
+    try await self.migrateV2()
   }
 
   deinit { Task { [sqlite] in try await sqlite.close() } }
@@ -75,7 +76,7 @@ extension RudeusDatabase {
     guard userExists else { throw RudeusDatabaseError.userNotFound }
     let rows = try await self.sqlite.query(
       """
-      SELECT u.id as userId, p.ahapData
+      SELECT u.id as userId, p.version
       FROM Patterns p
       LEFT JOIN Users u
         ON u.id = p.userId
@@ -85,38 +86,38 @@ extension RudeusDatabase {
     )
     let storedPattern =
       try rows.compactMap {
-        ($0.uuidv7(column: "userId")!, try $0.ahapPattern(column: "ahapData")!)
+        ($0.uuidv7(column: "userId")!, $0.column("version")?.integer!)
       }
       .first
     var newPattern = pattern
-    if let (userId, ahapPattern) = storedPattern {
+    if let (userId, version) = storedPattern {
       guard userId == pattern.user.id else {
         throw RudeusDatabaseError.unauthorizedPatternSave
       }
-      newPattern.ahapPattern = ahapPattern
-      newPattern.ahapPattern.version += 1
+      newPattern.version = (version ?? 1) + 1
     }
     _ = try await self.sqlite.query(
       """
-      INSERT INTO Patterns (id, userId, name, description, ahapData, platform)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO Patterns (id, userId, name, description, ahapData, platform, version)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT (id) DO UPDATE
         SET
             name = ?,
             ahapData = ?,
             description = ?,
             platform = ?,
-            lastUpdatedAt = unixepoch('now', 'subsec')
+            lastUpdatedAt = unixepoch('now', 'subsec'),
+            version = ?
       """,
       [
         .uuid(newPattern.id), .uuid(newPattern.user.id), .text(newPattern.name),
         .text(newPattern.description),
         .blob(ByteBuffer(data: newPattern.ahapPattern.data())),
-        .text(newPattern.platform.rawValue),
+        .text(newPattern.platform.rawValue), .integer(newPattern.version),
         .text(newPattern.name),
         .blob(ByteBuffer(data: newPattern.ahapPattern.data())),
         .text(newPattern.description),
-        .text(newPattern.platform.rawValue)
+        .text(newPattern.platform.rawValue), .integer(newPattern.version)
       ]
     )
     return newPattern
@@ -163,7 +164,8 @@ extension RudeusDatabase {
           name: row.column("username")!.string!
         ),
         ahapPattern: try row.ahapPattern(column: "ahapData")!,
-        platform: (row.column("platform")?.string.flatMap(RudeusPattern.Platform.init(rawValue:)))!
+        platform: (row.column("platform")?.string.flatMap(RudeusPattern.Platform.init(rawValue:)))!,
+        version: row.column("version")!.integer!
       )
     }
   }
@@ -200,6 +202,14 @@ extension RudeusDatabase {
         lastUpdatedAt DATETIME NOT NULL DEFAULT (unixepoch('now', 'subsec')),
         FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE
       )
+      """
+    )
+  }
+
+  private func migrateV2() async throws {
+    _ = try await self.sqlite.query(
+      """
+      ALTER TABLE Patterns ADD version INTEGER NOT NULL DEFAULT 1
       """
     )
   }

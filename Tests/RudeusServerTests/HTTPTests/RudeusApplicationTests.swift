@@ -75,7 +75,7 @@ struct RudeusApplicationTests {
 
       let patterns = try await self.patterns(client: client)
       expectNoDifference(patterns, [pattern])
-      #expect(pattern.ahapPattern.version == 2)
+      #expect(pattern.version == 2)
     }
   }
 
@@ -197,13 +197,7 @@ struct RudeusApplicationTests {
         #expect(body.id == id)
       }
       #expect(body.name == request.name)
-      if expectedStatus == .created {
-        #expect(body.ahapPattern == request.ahapPattern)
-      } else {
-        var ahapPattern = request.ahapPattern
-        ahapPattern.version += 1
-        #expect(body.ahapPattern == ahapPattern)
-      }
+      #expect(body.ahapPattern == request.ahapPattern)
       #expect(body.description == request.description)
       #expect(body.platform == request.platform)
       return body
