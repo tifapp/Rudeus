@@ -18,4 +18,4 @@ This server uses Swift’s [Hummingbird](https://github.com/hummingbird-project/
 
 Authentication is handled through simple JWTs. Users do not create passwords when registering because accounts are only meant to be tied to 1 device, that device uses the JWT returned from the `api/register` endpoint. Since only 1 device per account is needed, there is no reason that a user would need to enter their password to login to their account from another device.
 
-SQLite is used as the database due to the simple nature of this application, and it is used in the `RudeusDatabase` actor.
+SQLite is used as the database due to the simple nature of this application, and it is used in the `RudeusDatabase` actor. When adding new migrations, please ensure to add a new `migrateVX` function. This makes it clear what iteration the migration changes come in.
